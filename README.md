@@ -83,7 +83,7 @@ docker run -d -p 8080:8080 --name symfony-app symfony-app
 
 ---
 
-## ðŸ› ï¸  Development
+## Development
 
 ### Running Symfony Commands
 
