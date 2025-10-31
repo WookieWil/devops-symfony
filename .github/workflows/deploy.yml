@@ -1,0 +1,84 @@
+name: Deploy to Fly.io
+
+on:
+  workflow_run:
+    # Triggered by the successful run of the CI workflow
+    workflows: ["CI ChallengePipeLine"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    
+    # Incorporate concurrency from the Fly.io template (optional, but good practice)
+    concurrency: deploy-group 
+    
+    # Only run if the preceding CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} 
+    
+    environment:
+      name: prod
+      url: https://symfony-devops.fly.dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      # 1. Setup Flyctl (required early for setting secrets)
+      - name: Setup Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+        with:
+          token: ${{ secrets.FLY_API_TOKEN }} 
+          
+      # 2. Inject Decryption Key as Fly Secret (CRITICAL SECURITY STEP)
+      # Set the SYMFONY_DECRYPTION_KEY on the Fly.io app without restarting the app
+      - name: Inject Symfony Decryption Key
+        # Assuming your Fly app name is 'devops-symfony'. Adjust if needed.
+        run: flyctl secrets set SYMFONY_DECRYPTION_KEY="${{ secrets.SYMFONY_DECRYPTION_KEY }}" --app devops-symfony
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }} 
+
+      # 3. Prepare Image Tag
+      - name: Set Deployment Variables
+        id: vars
+        run: |
+          REPO_NAME_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          # Get the SHA from the completed CI workflow run context
+          SHA_TAG="${{ github.event.workflow_run.head_sha }}"
+          
+          # Set the full immutable image tag
+          echo "image_tag=ghcr.io/$REPO_NAME_LOWER:$SHA_TAG" >> $GITHUB_OUTPUT
+
+      # 4. Deploy using the specific image tag (Immutability Principle)
+      - name: Deploy to Fly.io
+        # Instruct Fly.io to deploy the exact image we built and pushed in CI
+        run: flyctl deploy --remote-only --ha=false --image ${{ steps.vars.outputs.image_tag }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Wait for deployment
+        run: sleep 20
+
+      - name: Verify deployment
+        run: |
+          APP_URL="https://symfony-devops.fly.dev"
+          HEALTH_ENDPOINT="$APP_URL/health"
+          echo "Verifying deployment at $HEALTH_ENDPOINT"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_ENDPOINT)
+          
+          if [ $RESPONSE -eq 200 ]; then
+            echo "✅ Deployment successful"
+          else
+            echo "❌ Deployment failed with status code: $RESPONSE"
+            exit 1
+          fi
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed, initiating rollback..."
+          flyctl releases rollback -y
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

@@ -1,0 +1,9 @@
+var/cache/*
+var/log/*
+.git
+.env.local
+vendor
+.idea
+.vscode
+.DS_Store
+*.md
