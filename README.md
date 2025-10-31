@@ -1,88 +1,114 @@
 # DevOps Symfony
 
-A Symfony-based DevOps playground project demonstrating containerization, CI/CD workflows, and modern deployment practices.
+> A Symfony-based DevOps playground demonstrating containerization, CI/CD workflows, and modern deployment practices.
 
 ## Overview
 
-This repository serves as a practical example of deploying a Symfony application using Docker, GitHub Actions, and cloud deployment platforms. Starting template for Symfony projects with production-ready infrastructure.
+This repository is a production-ready Symfony application template showcasing modern DevOps practices including:
+- Docker containerization
+- GitHub Actions CI/CD pipelines
+- Cloud deployment with Fly.io
+
+Perfect for learning DevOps or jumpstarting your next Symfony project.
+
+---
 
 ## Features
 
-- **Dockerized Environment**: Fully containerized Symfony application with Docker and Docker Compose
-- **CI/CD Pipeline**: Automated workflows using GitHub Actions
-- **Cloud Deployment**: Configured for deployment to Fly.io
-- **Development Ready**: Pre-configured environment files and editor settings
+- **Dockerized Environment** - Fully containerized with Docker & Docker Compose
+- **CI/CD Pipeline** - Automated workflows via GitHub Actions
+- **Cloud Ready** - Pre-configured for Fly.io deployment
+- **Development Ready** - Pre-configured environment files and editor settings
+
+---
 
 ## Project Structure
 
-- `.github/workflows/` - GitHub Actions CI/CD pipeline configurations
-- `bin/` - Symfony console and executable scripts
-- `config/` - Application configuration files
-- `docker/` - Docker-related configuration files
-- `public/` - Web server document root
-- `src/` - Application source code
-- `Dockerfile` - Container image definition
-- `docker-compose.yml` - Multi-container orchestration
-- `fly.toml` - Fly.io deployment configuration
+```
+devops-symfony/
+â”œâ”€â”€ .github/workflows/    # CI/CD pipeline configurations
+â”œâ”€â”€ bin/                  # Symfony console & executable scripts
+â”œâ”€â”€ config/               # Application configuration
+â”œâ”€â”€ docker/               # Docker configuration files
+â”œâ”€â”€ public/               # Web server document root
+â”œâ”€â”€ src/                  # Application source code
+â”œâ”€â”€ Dockerfile            # Container image definition
+â”œâ”€â”€ docker-compose.yml    # Multi-container orchestration
+â””â”€â”€ fly.toml              # Fly.io deployment config
+```
 
-## Prerequisites
-
-- Docker and Docker Compose
-- PHP 8.0 or higher
-- Composer
-- Git
+---
 
 ## Quick Start
 
-### 1. Clone the Repository
+### Prerequisites
 
+Before starting, ensure you have:
+- **Docker** and **Docker Compose** installed
+- **PHP 8.0+** (for local development)
+- **Composer** (PHP dependency manager)
+- **Git**
+
+### Installation
+
+**1. Clone the repository**
 ```bash
 git clone https://github.com/WookieWil/devops-symfony.git
 cd devops-symfony
 ```
 
-### 2. Environment Setup
-
-Copy the development environment file:
-
+**2. Set up environment variables**
 ```bash
 cp .env.dev .env
 ```
+Edit `.env` to configure your local settings.
 
-Edit `.env` to configure your local environment variables as needed.
+**3. Build and run with Docker**
 
-### 3. Install Dependencies
-
+**Option A: Using Docker Compose (Recommended for development)**
 ```bash
+docker-compose up -d
 docker-compose exec app composer install
 ```
 
-### 4. Build and Run locally via Docker
-
+**Option B: Using Docker CLI**
 ```bash
 docker build -t symfony-app .
-
 docker run -d -p 8080:8080 --name symfony-app symfony-app
 ```
 
-The application should now be running and accessible at `http://localhost:8000` (or the port specified in your docker-compose.yml).
+**4. Access the application**
+- Main app: http://localhost:8080
+- Health check: http://localhost:8080/health
 
-Check `http://localhost:8000/health` for health check response.
+---
 
-## Development
+## ðŸ› ï¸  Development
 
 ### Running Symfony Commands
 
 Execute Symfony console commands inside the container:
-
 ```bash
 docker-compose exec app bin/console [command]
+```
+
+**Examples:**
+```bash
+# Clear cache
+docker-compose exec app bin/console cache:clear
+
+# List all routes
+docker-compose exec app bin/console debug:router
 ```
 
 ### Viewing Logs
 
 ```bash
+# Follow application logs
 docker-compose logs -f app
+
+# View all service logs
+docker-compose logs -f
 ```
 
 ### Stopping the Application
@@ -91,33 +117,89 @@ docker-compose logs -f app
 docker-compose down
 ```
 
-## Deployment
+To also remove volumes:
+```bash
+docker-compose down -v
+```
 
-This project is configured for deployment to Fly.io. The `fly.toml` file contains the deployment configuration.
+---
+
+## Deployment
 
 ### Deploy to Fly.io
 
-1. Install the Fly CLI
-2. Authenticate with `fly auth login`
-3. Deploy with `fly deploy`
+This project is pre-configured for Fly.io deployment via `fly.toml`.
+
+**Steps:**
+
+1. **Install Fly CLI**
+   ```bash
+   curl -L https://fly.io/install.sh | sh
+   ```
+
+2. **Authenticate**
+   ```bash
+   fly auth login
+   ```
+
+3. **Deploy**
+   ```bash
+   fly deploy
+   ```
+
+4. **Open your app**
+   ```bash
+   fly open
+   ```
+
+---
 
 ## CI/CD
 
-GitHub Actions workflows are configured in `.github/workflows/` to automate:
+GitHub Actions workflows in `.github/workflows/` automate:
 
 - Code quality checks
 - Automated testing
 - Container image building
 - Deployment pipelines
 
+Workflows trigger automatically on:
+- Push to `main` branch
+- Pull request creation
+- Manual workflow dispatch
+
+---
+
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Here's how:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
 
 ## License
 
 This project is open source and available for educational and development purposes.
 
+---
+
 ## Acknowledgments
 
-Built with Symfony framework and modern DevOps tooling for demonstration and learning purposes.
+Built with:
+- [Symfony](https://symfony.com/) - PHP framework
+- [Docker](https://www.docker.com/) - Containerization
+- [Fly.io](https://fly.io/) - Deployment platform
+- [GitHub Actions](https://github.com/features/actions) - CI/CD automation
+
+---
+
+## Support
+
+If you encounter any issues or have questions:
+- Open an [issue](https://github.com/WookieWil/devops-symfony/issues)
+- Check existing [discussions](https://github.com/WookieWil/devops-symfony/discussions)
