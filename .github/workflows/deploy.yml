@@ -35,8 +35,8 @@ jobs:
       # 2. Inject Decryption Key as Fly Secret (CRITICAL SECURITY STEP)
       # Set the SYMFONY_DECRYPTION_KEY on the Fly.io app without restarting the app
       - name: Inject Symfony Decryption Key
-        # Assuming your Fly app name is 'devops-symfony'. Adjust if needed.
-        run: flyctl secrets set SYMFONY_DECRYPTION_KEY="${{ secrets.SYMFONY_DECRYPTION_KEY }}" --app devops-symfony
+        # Assuming your Fly app name is 'symfony-devops'. Adjust if needed.
+        run: flyctl secrets set SYMFONY_DECRYPTION_KEY="${{ secrets.SYMFONY_DECRYPTION_KEY }}" --app symfony-devops
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }} 
 
