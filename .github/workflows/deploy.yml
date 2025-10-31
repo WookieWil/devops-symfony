@@ -5,7 +5,7 @@ on:
     # Triggered by the successful run of the CI workflow
     workflows: ["CI ChallengePipeLine"]
     types: [completed]
-    branches: [main]
+    branches: [master]
 
 jobs:
   deploy:
