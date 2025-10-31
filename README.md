@@ -26,15 +26,15 @@ Perfect for learning DevOps or jumpstarting your next Symfony project.
 
 ```
 devops-symfony/
-â”œâ”€â”€ .github/workflows/    # CI/CD pipeline configurations
-â”œâ”€â”€ bin/                  # Symfony console & executable scripts
-â”œâ”€â”€ config/               # Application configuration
-â”œâ”€â”€ docker/               # Docker configuration files
-â”œâ”€â”€ public/               # Web server document root
-â”œâ”€â”€ src/                  # Application source code
-â”œâ”€â”€ Dockerfile            # Container image definition
-â”œâ”€â”€ docker-compose.yml    # Multi-container orchestration
-â””â”€â”€ fly.toml              # Fly.io deployment config
+├── .github/workflows/      # CI/CD pipeline configurations
+├── bin/                    # Symfony console & executable scripts
+├── config/                 # Application configuration
+├── docker/                 # Docker configuration files
+├── public/                 # Web server document root
+├── src/                    # Application source code
+├── Dockerfile              # Container image definition
+├── docker-compose.yml      # Multi-container orchestration
+└── fly.toml                # Fly.io deployment config
 ```
 
 ---
