@@ -2,6 +2,8 @@
 
 > A Symfony-based DevOps playground demonstrating containerization, CI/CD workflows, and modern deployment practices.
 
+[![Deploy to Fly.io](https://github.com/WookieWil/devops-symfony/actions/workflows/deploy.yml/badge.svg)](https://github.com/WookieWil/devops-symfony/actions/workflows/deploy.yml)
+
 ## Overview
 
 This repository is a production-ready Symfony application template showcasing modern DevOps practices including:
